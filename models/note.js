@@ -13,7 +13,7 @@ const noteSchema = new Schema(
       required: true,
       minlength: 5,
     },
-    creater: {
+    author: {
       type: String,
       default: "Anonymous",
     },
