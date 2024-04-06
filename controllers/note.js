@@ -3,7 +3,17 @@ const { validationResult } = require("express-validator");
 //models
 const Note = require("../models/note");
 
-exports.getNotes = (req, res, next) => {};
+exports.getNotes = (req, res, next) => {
+  Note.find()
+    .sort({ createdAt: -1 })
+    .then((notes) => {
+      return res.status(200).json({ notes });
+    })
+    .catch((err) => {
+      res.status(404).json({ message: "Notes Not Found" });
+      console.log(err);
+    });
+};
 
 exports.createNote = (req, res, next) => {
   const { title, content } = req.body;
