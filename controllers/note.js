@@ -7,7 +7,7 @@ exports.getNotes = (req, res, next) => {
   Note.find()
     .sort({ createdAt: -1 })
     .then((notes) => {
-      return res.status(200).json({ notes });
+      return res.status(200).json(notes);
     })
     .catch((err) => {
       res.status(404).json({ message: "Notes Not Found" });
