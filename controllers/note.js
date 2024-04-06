@@ -38,3 +38,15 @@ exports.createNote = (req, res, next) => {
       res.status(404).json({ message: "Note Creation Failed" });
     });
 };
+
+exports.getNoteDetails = (req, res, next) => {
+  const { id } = req.params;
+  Note.findById(id)
+    .then((note) => {
+      return res.status(200).json(note);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).json({ message: "Note Not Found" });
+    });
+};
