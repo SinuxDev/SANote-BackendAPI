@@ -50,3 +50,15 @@ exports.getNoteDetails = (req, res, next) => {
       res.status(404).json({ message: "Note Not Found" });
     });
 };
+
+exports.deleteNote = (req, res, next) => {
+  const { id } = req.params;
+  Note.findByIdAndDelete(id)
+    .then((_) => {
+      return res.status(204).json({ message: "Note Deleted" });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).json({ message: "Note Deletion Failed" });
+    });
+};
