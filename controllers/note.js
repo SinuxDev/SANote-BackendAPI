@@ -62,3 +62,37 @@ exports.deleteNote = (req, res, next) => {
       res.status(404).json({ message: "Note Deletion Failed" });
     });
 };
+
+exports.getEditNote = (req, res, next) => {
+  const { id } = req.params;
+  Note.findById(id)
+    .then((note) => {
+      return res.status(200).json(note);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).json({ message: "Note not found" });
+    });
+};
+
+exports.updateNote = (req, res, next) => {
+  const { id } = req.params;
+  const { title, content } = req.body;
+
+  Note.findById(id)
+    .then((note) => {
+      if (!note) {
+        return res.status(404).json({ message: "Note not found" });
+      }
+      note.title = title;
+      note.content = content;
+      return note.save();
+    })
+    .then(() => {
+      return res.status(200).json({ message: "Note Updated" });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).json({ message: "Note Update Failed" });
+    });
+};
