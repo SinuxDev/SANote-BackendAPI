@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
@@ -31,6 +32,7 @@ const fileFilterConfigure = (req, file, cb) => {
   }
 };
 
+app.use("/Uploads", express.static(path.join(__dirname, "Uploads")));
 app.use(bodyParser.json());
 app.use(
   multer({ storage: stroageConfigure, fileFilter: fileFilterConfigure }).single(
