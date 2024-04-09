@@ -3,6 +3,9 @@ const { validationResult } = require("express-validator");
 //models
 const Note = require("../models/note");
 
+//utils
+const { unlink } = require("../utils/unlink");
+
 exports.getNotes = (req, res, next) => {
   Note.find()
     .sort({ createdAt: -1 })
@@ -80,6 +83,7 @@ exports.getEditNote = (req, res, next) => {
 exports.updateNote = (req, res, next) => {
   const { id } = req.params;
   const { title, content } = req.body;
+  const cover_image = req.file;
 
   Note.findById(id)
     .then((note) => {
@@ -88,6 +92,16 @@ exports.updateNote = (req, res, next) => {
       }
       note.title = title;
       note.content = content;
+      if (cover_image) {
+        unlink(note.cover_image, (err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          //file removed
+        });
+        note.cover_image = cover_image.path;
+      }
       return note.save();
     })
     .then(() => {
