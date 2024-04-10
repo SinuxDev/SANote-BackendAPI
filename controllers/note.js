@@ -58,9 +58,13 @@ exports.getNoteDetails = (req, res, next) => {
 
 exports.deleteNote = (req, res, next) => {
   const { id } = req.params;
-  Note.findByIdAndDelete(id)
-    .then((_) => {
-      return res.status(204).json({ message: "Note Deleted" });
+  Note.findById(id)
+    .then((note) => {
+      unlink(note.cover_image);
+
+      return Note.findByIdAndDelete(id).then((_) => {
+        return res.status(204).json({ message: "Note Deleted" });
+      });
     })
     .catch((err) => {
       console.log(err);
