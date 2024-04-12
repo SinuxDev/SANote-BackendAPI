@@ -7,10 +7,21 @@ const Note = require("../models/note");
 const { unlink } = require("../utils/unlink");
 
 exports.getNotes = (req, res, next) => {
+  const currentPage = req.query.page || 1;
+  const perPage = 6;
+  let totalNotes;
+
   Note.find()
-    .sort({ createdAt: -1 })
+    .countDocuments()
+    .then((countNotes) => {
+      totalNotes = countNotes;
+      return Note.find()
+        .sort({ createdAt: -1 })
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage);
+    })
     .then((notes) => {
-      return res.status(200).json(notes);
+      return res.status(200).json({ notes, totalNotes });
     })
     .catch((err) => {
       res.status(404).json({ message: "Notes Not Found" });
