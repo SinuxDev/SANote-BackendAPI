@@ -10,18 +10,24 @@ exports.getNotes = (req, res, next) => {
   const currentPage = req.query.page || 1;
   const perPage = 6;
   let totalNotes;
+  let totalPages;
 
   Note.find()
     .countDocuments()
     .then((countNotes) => {
       totalNotes = countNotes;
+
+      //Logic => total note = 12 , perPage = 6 ,
+      // 12/6 = 2 => 2 pages
+      totalPages = Math.ceil(totalNotes / perPage);
+
       return Note.find()
         .sort({ createdAt: -1 })
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })
     .then((notes) => {
-      return res.status(200).json({ notes, totalNotes });
+      return res.status(200).json({ notes, totalNotes, totalPages });
     })
     .catch((err) => {
       res.status(404).json({ message: "Notes Not Found" });
