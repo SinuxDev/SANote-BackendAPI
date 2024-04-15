@@ -40,4 +40,26 @@ router.post(
   authController.register
 );
 
+//Post /login
+router.post(
+  "/login",
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Username or email is not valid")
+      .custom((value, { req }) => {
+        return User.findOne({ email: value }).then((userDoc) => {
+          if (!userDoc) {
+            return Promise.reject("User is not exists");
+          }
+        });
+      }),
+    body("password")
+      .trim()
+      .isLength({ min: 4 })
+      .withMessage("Username or email is not valid"),
+  ],
+  authController.login
+);
+
 module.exports = router;
