@@ -57,15 +57,17 @@ exports.login = (req, res, next) => {
             return res.status(200).json({ message: "Login Success" });
           }
 
-          return res.status(404).json({ message: "Password Not Matched" });
+          return res
+            .status(401)
+            .json({ message: "email or passsword is not valid" });
         })
         .catch((err) => {
           console.log(err);
-          return res.status(404).json({ message: "Faild!" });
+          return res.status(400).json({ message: "Faild!" });
         });
     })
     .catch((err) => {
       console.log(err);
-      return res.status(404).json({ message: "Login Process Failed" });
+      return res.status(400).json({ message: err.message });
     });
 };
