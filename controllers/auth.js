@@ -1,5 +1,8 @@
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
 const User = require("../models/user");
 
 exports.register = (req, res, next) => {
@@ -54,12 +57,16 @@ exports.login = (req, res, next) => {
         .compare(password, user.password)
         .then((isMatch) => {
           if (isMatch) {
-            return res.status(200).json({ message: "Login Success" });
+            const token = jwt.sign(
+              { email: user.email, userId: user._id },
+              process.env.JWT_KEY,
+              { expiresIn: "1h" }
+            );
+
+            return res.status(200).json({ token, userId: user._id });
           }
 
-          return res
-            .status(401)
-            .json({ message: "email or passsword is not valid" });
+          return res.status(401).json({ message: "Try Again" });
         })
         .catch((err) => {
           console.log(err);
