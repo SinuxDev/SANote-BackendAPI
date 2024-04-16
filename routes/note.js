@@ -4,12 +4,15 @@ const { body } = require("express-validator");
 
 const noteController = require("../controllers/note");
 
+const authMiddleware = require("../middleware/is-auth");
+
 // GET: /notes
 router.get("/notes", noteController.getNotes);
 
 // POST: /create
 router.post(
   "/create",
+  authMiddleware,
   [
     body("title")
       .trim()
@@ -29,14 +32,15 @@ router.post(
 router.get("/notes/:id", noteController.getNoteDetails);
 
 // Delete /delete/:id
-router.delete("/delete/:id", noteController.deleteNote);
+router.delete("/delete/:id", authMiddleware, noteController.deleteNote);
 
 // Get Edit /edit/:id
-router.get("/edit/:id", noteController.getEditNote);
+router.get("/edit/:id", authMiddleware, noteController.getEditNote);
 
 // Edit /edit/:id
 router.post(
   "/edit-note/:id",
+  authMiddleware,
   [
     body("title")
       .trim()
