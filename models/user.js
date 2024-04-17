@@ -18,11 +18,7 @@ const userSchema = new Schema({
     required: true,
     minlength: 4,
   },
-  notes: {
-    type: Schema.Types.ObjectId,
-    ref: "notes",
-  },
 });
 
-const User = model("users", userSchema);
+const User = model("User", userSchema);
 module.exports = User;
