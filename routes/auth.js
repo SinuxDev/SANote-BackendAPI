@@ -4,6 +4,7 @@ const { body } = require("express-validator");
 
 const authController = require("../controllers/auth");
 const User = require("../models/user");
+const isAuth = require("../middleware/is-auth");
 
 //Post /register
 router.post(
@@ -61,5 +62,8 @@ router.post(
   ],
   authController.login
 );
+
+// Get /status
+router.get("/status", isAuth);
 
 module.exports = router;
