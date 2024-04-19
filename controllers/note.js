@@ -79,6 +79,10 @@ exports.deleteNote = (req, res, next) => {
   const { id } = req.params;
   Note.findById(id)
     .then((note) => {
+      if (note.author.toString() !== req.userId) {
+        return res.status(401).json({ message: "Not Authorized" });
+      }
+
       if (note.cover_image) {
         unlink(note.cover_image);
       }
@@ -97,6 +101,9 @@ exports.getEditNote = (req, res, next) => {
   const { id } = req.params;
   Note.findById(id)
     .then((note) => {
+      if (note.author.toString() !== req.userId) {
+        return res.status(401).json({ message: "Not Authorized" });
+      }
       return res.status(200).json(note);
     })
     .catch((err) => {
@@ -112,9 +119,14 @@ exports.updateNote = (req, res, next) => {
 
   Note.findById(id)
     .then((note) => {
+      if (note.author.toString() !== req.userId) {
+        return res.status(401).json({ message: "Not Authorized" });
+      }
+
       if (!note) {
         return res.status(404).json({ message: "Note not found" });
       }
+
       note.title = title;
       note.content = content;
       if (cover_image) {
