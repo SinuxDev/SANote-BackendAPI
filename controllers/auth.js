@@ -63,7 +63,11 @@ exports.login = (req, res, next) => {
               { expiresIn: "1h" }
             );
 
-            return res.status(200).json({ token, userId: user._id });
+            return res.status(200).json({
+              token,
+              userId: user._id,
+              userName: user.username,
+            });
           }
 
           return res.status(401).json({ message: "Try Again" });
